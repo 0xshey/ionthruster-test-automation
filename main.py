@@ -1,27 +1,41 @@
-from virtual_ion_thruster import VirtualIonThruster
 import time
+from virtual_ion_thruster import VirtualIonThruster
 
 def main():
-	thruster = VirtualIonThruster()
-	thruster.update_config(
-		ioniser_voltage=120.0,
-		grid_anode_voltage=200.0,
-		grid_cathode_voltage=50.0,
-		propellant_flow_rate=3.0
-	)
+    # Instantiate the virtual thruster
+    thruster = VirtualIonThruster(tick_rate=0.5)
 
-	thruster.start()
+    print("=== TEST: Starting thruster ===")
+    thruster.start()
 
-	# Let it run a bit...
-	time.sleep(2)
+    # Let it idle briefly
+    time.sleep(2)
 
-	thruster.update_config(grid_anode_voltage=400.0)  # Live update
+    print("=== TEST: Applying configuration ===")
+    thruster.update_config(
+        ioniser_voltage=120.0,
+        grid_anode_voltage=100.0,
+        grid_cathode_voltage=30.0,
+        propellant_flow_rate=5.0
+    )
 
-	# More runtime
-	time.sleep(3)
+    # Run for a few ticks
+    time.sleep(5)
 
-	thruster.stop()
+    print("=== TEST: Changing config mid-run ===")
+    thruster.update_config(
+        ioniser_voltage=150.0,
+        grid_anode_voltage=130.0,
+        grid_cathode_voltage=40.0,
+        propellant_flow_rate=7.5
+    )
 
+    time.sleep(5)
+
+    print("=== TEST: Stopping thruster ===")
+    thruster.stop()
+
+    print("=== TEST COMPLETE ===")
 
 if __name__ == "__main__":
-	main()
+    main()
