@@ -1,9 +1,6 @@
 import time
 import threading
-import random
-
-def noise(mu, sigma):
-	return random.gauss(mu, sigma)
+from utils import rng
 
 class VirtualIonThruster:
 	def __init__(self, tick_rate=0.1):
@@ -64,8 +61,8 @@ class VirtualIonThruster:
 			self.ioniser_current = ioniser_v / 100.0 if self.output_enabled else 0.0
 			self.grid_current = abs(grid_v) / 120.0 if self.output_enabled else 0.0
 
-			self.ioniser_current += noise(0, 0.02)
-			self.grid_current += noise(0, 0.01)
+			self.ioniser_current += rng.noise(0, 0.02)
+			self.grid_current += rng.noise(0, 0.01)
 
 			self.power_draw = {
 				"ioniser": ioniser_v * self.ioniser_current,
@@ -81,12 +78,12 @@ class VirtualIonThruster:
 			else:
 				self.chamber_temperature -= 0.3  # natural cooling
 
-			self.chamber_temperature = self.chamber_temperature + noise(0, 0.2)
+			self.chamber_temperature = self.chamber_temperature + rng.noise(0, 0.2)
 
 			# Thrust generation
 			if self.output_enabled and flow > 0 and ioniser_v > 0 and grid_v > 0:
 				self.thrust = flow * (ioniser_v * 0.01 + grid_v * 0.01)
-				self.thrust += noise(0, 0.05)
+				self.thrust += rng.noise(0, 0.05)
 			else:
 				self.thrust = 0.0
 
